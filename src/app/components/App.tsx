@@ -31,7 +31,7 @@ function subString(str, n) {
 
 
 const App = ({ }) => {
-    const [tagActive, setTagActive] = React.useState("全部");
+    const [tagActive, setTagActive] = React.useState("All");
     const [allPlugins, setAllPlugins] = React.useState([]);
     const [plugins, setPlugins] = React.useState([]);
     const [icon, setIcon] = React.useState([]);
@@ -55,89 +55,89 @@ const App = ({ }) => {
     const [svg, setSvg] = React.useState([]);
     const [inputValue, setInputValue] = React.useState();
     const [sort, setSort] = React.useState("installCount");
-    const [thumbnail, setThumbnail] = React.useState(true);
+    const [thumbnail, setThumbnail] = React.useState(false);
 
 
     let tagData = [
         {
-            name: "全部",
+            name: "All",
             plugins: allPlugins,
             tags: [],
             all: [],
             set: () => { },
         },
         {
-            name: "图标",
+            name: "Icon",
             plugins: icon,
             tags: ["icon"],
             all: [],
             set: setIcon,
         },
         {
-            name: "插画",
+            name: "Illustration",
             plugins: illustration,
             tags: ["llustration"],
             all: [],
             set: setIllustration,
         },
         {
-            name: "移动端",
+            name: "Mobile",
             plugins: mobile,
             tags: ["mobile", "ios", "android", "phone"],
             all: [],
             set: setMobile,
         },
         {
-            name: "颜色",
+            name: "Color",
             plugins: color,
             tags: ["color", "palette", "Gradient"],
             all: [],
             set: setColor,
         },
         {
-            name: "文字",
+            name: "Typography",
             plugins: text,
             tags: ["text", "typography", "font", "title", "Title"],
             all: [],
             set: setText,
         },
         {
-            name: "样机",
+            name: "Mockup",
             plugins: mock,
             tags: ["mockup"],
             all: [],
             set: setMock,
         },
         {
-            name: "图表",
+            name: "Chart",
             plugins: chart,
             tags: ["chart", "Visualization"],
             all: [],
             set: setChart,
         },
         {
-            name: "中文",
+            name: "Chinese",
             plugins: chinese,
             tags: ["Chinese", "China", "chinese", "china", "中", "是", "的"],
             all: [],
             set: setChinese,
         },
         {
-            name: "组件",
+            name: "Component",
             plugins: component,
             tags: ["component", "Component", "master", "datech"],
             all: [],
             set: setComponent,
         },
         {
-            name: "图像",
+            name: "Image",
             plugins: image,
             tags: ["image", "Image", "pic", "Pixel"],
             all: [],
             set: setImage,
         },
         {
-            name: "代码",
+            name: "Code",
             plugins: code,
             tags: [
                 "code",
@@ -154,7 +154,7 @@ const App = ({ }) => {
             set: setCode,
         },
         {
-            name: "布局",
+            name: "Layout",
             plugins: layout,
             tags: ["ayout", "grid"],
             all: [],
@@ -168,7 +168,7 @@ const App = ({ }) => {
             set: setThreeD,
         },
         {
-            name: "设计系统",
+            name: "Design System",
             plugins: dSystem,
             tags: [
                 "design system",
@@ -182,7 +182,7 @@ const App = ({ }) => {
             set: setDSystem,
         },
         {
-            name: "动画",
+            name: "Animation",
             plugins: animation,
             tags: ["animation", "Animation", "gif", "animate"],
             all: [],
@@ -196,7 +196,7 @@ const App = ({ }) => {
             set: setCool,
         },
         {
-            name: "原型",
+            name: "Prototype",
             plugins: prototype,
             tags: [
                 "prototype",
@@ -211,7 +211,7 @@ const App = ({ }) => {
             set: setPrototype,
         },
         {
-            name: "交付",
+            name: "Handoff",
             plugins: handoff,
             tags: ["hand-off", "handoff", "Hand-off", "Handoff"],
             all: [],
@@ -278,18 +278,18 @@ const App = ({ }) => {
         };
         const thumbnailToggle = () => {
             setThumbnail(!thumbnail);
+            window.scrollTo(0, 0);
         };
         const tagSortHandle = (tag, name) => {
             setPlugins(tag);
             setTagActive(name);
             window.scrollTo(0, 0);
-            console.log(name);
         };
 
         return (
             <HeaderStyle>
                 <ul>
-                    <li onClick={thumbnailToggle}>封面</li>
+                    <li onClick={thumbnailToggle}>Cover</li>
                     {tagData.map((t) => {
                         return (
                             <li

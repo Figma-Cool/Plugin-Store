@@ -29,7 +29,7 @@ export const AppStyle = styled.div`
     }
   }
   .thumbnailView {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+    /* grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important; */
 
     a {
       padding: 0;
@@ -51,12 +51,12 @@ export const AppStyle = styled.div`
   }
   main {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit,minmax(50%,1fr));
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     margin-top: 12px;
-    width: calc(100vw - 120px);
-    margin-left: 120px;
+    width: calc(100vw - 150px);
+    margin-left: 150px;
 
     a {
       text-align: left;
@@ -93,7 +93,7 @@ export const AppStyle = styled.div`
         line-height: 1.45;
         margin: 0 0 4px 0;
         color: rgba(0, 0, 0, 0.7);
-        width: 248px;
+        width: 100%;
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -142,7 +142,7 @@ export const HeaderStyle = styled.nav`
   left: 0;
   top: 0;
   height: 100vh;
-  width: 120px;
+  width: 150px;
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 1);
