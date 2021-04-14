@@ -76,7 +76,7 @@ export const AppStyle = styled.div`
     grid-template-columns: repeat(auto-fit,minmax(50%,1fr));
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    margin-top: 46px;
+    margin-top: 34px;
     width: calc(100vw - 150px);
     margin-left: 150px;
 
