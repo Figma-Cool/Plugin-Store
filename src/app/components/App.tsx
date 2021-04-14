@@ -234,13 +234,6 @@ const App = ({ }) => {
             .then((data) => {
                 allData = [...data.plugins];
                 allData.sort(compare(sort));
-                // allData.forEach((i) => {
-                //     zh.forEach((t) => {
-                //         if (i.name === t.name) {
-                //             i.description = t.zh;
-                //         }
-                //     });
-                // });
                 setPlugins(allData);
                 setAllPlugins(allData);
             });
@@ -269,30 +262,36 @@ const App = ({ }) => {
         });
     }, [allPlugins]);
 
-    const Header = () => {
-        const likeSortHandle = () => {
-            setSort("likeCount");
-        };
-        const downSortHandle = () => {
-            setSort("installCount");
-        };
-        const thumbnailToggle = () => {
-            setThumbnail(!thumbnail);
-            window.scrollTo(0, 0);
-        };
-        const tagSortHandle = (tag, name) => {
-            setPlugins(tag);
-            setTagActive(name);
-            window.scrollTo(0, 0);
-        };
 
-        return (
+    const thumbnailToggle = () => {
+        setThumbnail(!thumbnail);
+        window.scrollTo(0, 0);
+    };
+    const tagSortHandle = (tag, name) => {
+        setPlugins(tag);
+        setTagActive(name);
+        window.scrollTo(0, 0);
+    };
+
+    const searchHandle = (e) => {
+        setPlugins(allPlugins.filter(t => {
+            let text = t.name.toLocaleLowerCase() + t.description.toLocaleLowerCase();
+            return text.includes(e.target.value);
+        }
+        ))
+        window.scrollTo(0, 0);
+    }
+
+    return (
+        <AppStyle className={"App"}>
+            <GlobalStyles />
             <HeaderStyle>
                 <ul>
                     <li onClick={thumbnailToggle}>Cover</li>
                     {tagData.map((t) => {
                         return (
                             <li
+                                key={Math.random()}
                                 onClick={(e) => tagSortHandle(t.plugins, e.target.innerText)}
                                 className={tagActive.includes(t.name) ? "tagActive" : null}
                             >
@@ -303,94 +302,82 @@ const App = ({ }) => {
                     })}
                 </ul>
             </HeaderStyle>
-        );
-    };
-
-    const pluginList = plugins.map((i) => {
-        return (
-            <a
-                key={Math.random()}
-                href={`https://www.figma.com/community/plugin/${i.id}`}
-                target="_blank"
-                rel="noreferrer"
-            >
-                {thumbnail ? (
-                    <img
-                        src={`https://www.figma.com/community/plugin/${i.id}/thumbnail`}
-                        alt="thumbnail"
-                        loading="lazy"
-                        className="cover"
-                    />
-                ) : null}
-                <section>
-                    <div className="card-top">
-                        <div className="name">
+            <input placeholder='Search...' onChange={(e) => searchHandle(e)} autoFocus />
+            <main className={thumbnail ? `thumbnailView` : null}>{plugins.map((i) => {
+                return (
+                    <a
+                        key={Math.random()}
+                        href={`https://www.figma.com/community/plugin/${i.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        {thumbnail ? (
                             <img
-                                src={`https://www.figma.com/community/plugin/${i.id}/icon`}
-                                alt="icon"
-                                className="icon"
+                                src={`https://www.figma.com/community/plugin/${i.id}/thumbnail`}
+                                alt="thumbnail"
+                                loading="lazy"
+                                className="cover"
                             />
-                            <h3>{i.name} </h3>
-                        </div>
-                        <p>
-                            {subString(
-                                i.description
-                                    .replace(/(<p>)/gi, "")
-                                    .replace(/(<\/p>)/gi, "")
-                                    .replace(/(<strong>)/gi, "")
-                                    .replace(/(<\/strong>)/gi, "")
-                                    .replace(/(<br>)/gi, "")
-                                    .replace(/(<\/br>)/gi, "")
-                                    .replace(/(<h2>)/gi, "")
-                                    .replace(/(<\/h2>)/gi, "")
-                                    .replace(/(<h1>)/gi, "")
-                                    .replace(/(<\/h1>)/gi, "")
-                                    .replace(/(<h3>)/gi, "")
-                                    .replace(/(<\/h3>)/gi, "")
-                                    .replace(/(<h4>)/gi, "")
-                                    .replace(/(<\/h4>)/gi, "")
-                                    .replace(/(<h5>)/gi, "")
-                                    .replace(/(<\/h5>)/gi, "")
-                                    .replace(/(<h6>)/gi, "")
-                                    .replace(/(<\/h6>)/gi, "")
-                                    .replace(/(<li>)/gi, "")
-                                    .replace(/(<a>)/gi, "")
-                                    .replace(/(<\/a>)/gi, "")
-                                    .replace(/(<span>)/gi, "")
-                                    .replace(/(<\/span>)/gi, "")
-                                    .replace(/(<\/li>)/gi, ""),
-                                100
-                            )}
-                        </p>
-                    </div>
-                    <div className="card-info">
-                        {/* <span>{i.publisherName}</span> */}
-                        <div>
-                            <span>
-                                <i>{`Likes: ${i.likeCount.toLocaleString()}`}</i>
-                            </span>
-                            <span>
-                                <i>{`Installs: ${i.installCount.toLocaleString()}`}</i>
-                            </span>
-                        </div>
-                    </div>
-                </section>
-            </a>
-        );
-    });
-
-
-
-    return (
-        <AppStyle className={"App"}>
-            <GlobalStyles />
-            <Header />
-            {/* <input
-          onChange={(e) => {
-            inputValueHandle(e);
-          }}
-        /> */}
-            <main className={thumbnail ? `thumbnailView` : null}>{pluginList}</main>
+                        ) : null}
+                        <section>
+                            <div className="card-top">
+                                <div className="name">
+                                    <img
+                                        src={`https://www.figma.com/community/plugin/${i.id}/icon`}
+                                        alt="icon"
+                                        className="icon"
+                                    />
+                                    <h3>{i.name} </h3>
+                                </div>
+                                <p>
+                                    {subString(
+                                        i.description
+                                            .replace(/(<p>)/gi, "")
+                                            .replace(/(<\/p>)/gi, "")
+                                            .replace(/(<strong>)/gi, "")
+                                            .replace(/(<\/strong>)/gi, "")
+                                            .replace(/(<br>)/gi, "")
+                                            .replace(/(<\/br>)/gi, "")
+                                            .replace(/(<h2>)/gi, "")
+                                            .replace(/(<\/h2>)/gi, "")
+                                            .replace(/(<h1>)/gi, "")
+                                            .replace(/(<\/h1>)/gi, "")
+                                            .replace(/(<h3>)/gi, "")
+                                            .replace(/(<\/h3>)/gi, "")
+                                            .replace(/(<h4>)/gi, "")
+                                            .replace(/(<\/h4>)/gi, "")
+                                            .replace(/(<h5>)/gi, "")
+                                            .replace(/(<\/h5>)/gi, "")
+                                            .replace(/(<h6>)/gi, "")
+                                            .replace(/(<\/h6>)/gi, "")
+                                            .replace(/(<li>)/gi, "")
+                                            .replace(/(<a>)/gi, "")
+                                            .replace(/(<\/a>)/gi, "")
+                                            .replace(/(<span>)/gi, "")
+                                            .replace(/(<\/span>)/gi, "")
+                                            .replace(/(<\/li>)/gi, ""),
+                                        100
+                                    )}
+                                </p>
+                            </div>
+                            <div className="card-info">
+                                {/* <span>{i.publisherName}</span> */}
+                                <div>
+                                    <span>
+                                        <i>{`Likes: ${i.likeCount.toLocaleString()}`}</i>
+                                    </span>
+                                    <span>
+                                        <i>{`Installs: ${i.installCount.toLocaleString()}`}</i>
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+                    </a>
+                );
+            })}</main>
+            <footer>
+                Made by <a target="_blank" href="https://figma.cool">Figma.Cool</a>
+            </footer>
         </AppStyle>
     );
 };

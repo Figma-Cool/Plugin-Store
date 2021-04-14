@@ -49,12 +49,34 @@ export const AppStyle = styled.div`
       }
     }
   }
+
+
+  input {
+        z-index: 99;
+        position: fixed;
+        top: 0;
+        left: 151px;
+        width: calc(100% - 150px);
+         height: 34px;
+         outline: none;
+         border: none;
+         border-bottom: 1px solid rgb(0 0 0 / 12%);
+         background: white;
+
+         &::placeholder {
+            font-size: 11px;
+            line-height: 16px;
+            letter-spacing: 0.005em;
+            color: rgba(0, 0, 0, 0.3);
+         }
+     }
+
   main {
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(50%,1fr));
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    margin-top: 12px;
+    margin-top: 46px;
     width: calc(100vw - 150px);
     margin-left: 150px;
 
@@ -134,6 +156,30 @@ export const AppStyle = styled.div`
       width: 100%;
     }
   }
+
+  footer {
+    z-index: 999;
+    width: calc(100% - 174px);
+    padding: 8px 12px;
+    position: fixed;
+    bottom: 0;
+    left: 151px;
+    background-color: white;
+    text-align: right;
+    font-size: 11px;
+    line-height: 12px;
+    color: rgb(51 51 51 / 80%);
+    border-top: 1px solid rgb(0 0 0 / 12%);
+
+    a {
+        color: #000;
+        text-decoration: none;
+
+        &:hover {
+            color: blue;
+        }
+    }
+  }
 `;
 
 export const HeaderStyle = styled.nav`
@@ -147,7 +193,7 @@ export const HeaderStyle = styled.nav`
   flex-direction: column;
   background: rgba(255, 255, 255, 1);
   overflow: scroll;
-  border-right: 1px solid rgb(0 0 0 / 12%);;
+  border-right: 1px solid rgb(0 0 0 / 12%);
   padding: 12px 0 0 0;
 
 
