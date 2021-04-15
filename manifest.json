@@ -1,6 +1,6 @@
 {
   "name": "Plugin Store",
-  "id": "00000000",
+  "id": "964142928021463219",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html"
