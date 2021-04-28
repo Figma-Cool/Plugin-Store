@@ -28,6 +28,9 @@ import iconSvg from '../assets/nav-icon/svg.svg';
 // import iconSearch from "../assets/search.svg";
 import iconTop from '../assets/backtop.svg';
 
+import {useIntersection} from 'react-use';
+import {chunk} from 'lodash';
+
 const url = 'https://yuanqing.github.io/figma-plugins-stats/';
 
 function compare(p) {
@@ -55,6 +58,101 @@ function subString(str, n) {
     return str;
 }
 
+const Card = (props) => {
+    const {thumbnail, data, showNext, index} = props;
+    const intersectionRef = React.useRef(null);
+    const intersection = useIntersection(intersectionRef, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1,
+    });
+
+    React.useEffect(() => {
+        if (intersection && intersection.intersectionRatio > 0) {
+            // console.log(index, chunkNum, index / chunkNum, (0.8 * chunkNum / 100));
+            if (index / chunkNum > (0.6 * chunkNum) / 100) {
+                showNext();
+            }
+        }
+    }, [intersection]);
+
+    return (
+        <div ref={intersectionRef}>
+            {intersection && intersection.intersectionRatio > 0 ? (
+                <a href={`https://www.figma.com/community/plugin/${data.id}`} target="_blank" rel="noreferrer">
+                    {thumbnail ? (
+                        <img
+                            src={`https://www.figma.com/community/plugin/${data.id}/thumbnail`}
+                            alt="thumbnail"
+                            loading="lazy"
+                            className="cover"
+                        />
+                    ) : null}
+                    <section>
+                        <div className="card-top">
+                            <div className="name">
+                                <img
+                                    src={`https://www.figma.com/community/plugin/${data.id}/icon`}
+                                    alt="icon"
+                                    className="icon"
+                                />
+                                <h3>{data.name} </h3>
+                            </div>
+                            <p>
+                                {subString(
+                                    data.description
+                                        .replace(/(<p>)/gi, '')
+                                        .replace(/(<\/p>)/gi, '')
+                                        .replace(/(<strong>)/gi, '')
+                                        .replace(/(<\/strong>)/gi, '')
+                                        .replace(/(<br>)/gi, '')
+                                        .replace(/(<\/br>)/gi, '')
+                                        .replace(/(<h2>)/gi, '')
+                                        .replace(/(<\/h2>)/gi, '')
+                                        .replace(/(<h1>)/gi, '')
+                                        .replace(/(<\/h1>)/gi, '')
+                                        .replace(/(<h3>)/gi, '')
+                                        .replace(/(<\/h3>)/gi, '')
+                                        .replace(/(<h4>)/gi, '')
+                                        .replace(/(<\/h4>)/gi, '')
+                                        .replace(/(<h5>)/gi, '')
+                                        .replace(/(<\/h5>)/gi, '')
+                                        .replace(/(<h6>)/gi, '')
+                                        .replace(/(<\/h6>)/gi, '')
+                                        .replace(/(<li>)/gi, '')
+                                        .replace(/(<a>)/gi, '')
+                                        .replace(/(<\/a>)/gi, '')
+                                        .replace(/(<span>)/gi, '')
+                                        .replace(/(<\/span>)/gi, '')
+                                        .replace(/(<\/li>)/gi, ''),
+                                    100
+                                )}
+                            </p>
+                        </div>
+                        <div className="card-info">
+                            {/* <span>{data.publisherName}</span> */}
+                            <div>
+                                <span>
+                                    <img src={iconLike} alt="like" />
+                                    <i>{data.likeCount.toLocaleString()}</i>
+                                </span>
+                                <span>
+                                    <img src={iconInstall} alt="install" />
+                                    <i>{data.installCount.toLocaleString()}</i>
+                                </span>
+                            </div>
+                        </div>
+                    </section>
+                </a>
+            ) : (
+                ''
+            )}
+        </div>
+    );
+};
+
+const chunkNum = 100; // 一次最多加载多少个 Card
+
 const App = ({}) => {
     const [tagActive, setTagActive] = React.useState('All');
     const [allPlugins, setAllPlugins] = React.useState([]);
@@ -81,6 +179,16 @@ const App = ({}) => {
     const [inputValue, setInputValue] = React.useState();
     const [sort, setSort] = React.useState('installCount');
     const [thumbnail, setThumbnail] = React.useState(false);
+    const [nowShowIndex, setNowShowIndex] = React.useState(1);
+
+    const setLazyPlugin = (data) => {
+        const chunkData = chunk(data, chunkNum);
+        setPlugins(chunkData);
+    };
+
+    const showNext = (page) => {
+        setNowShowIndex(page + 1);
+    };
 
     let tagData = [
         {
@@ -253,7 +361,7 @@ const App = ({}) => {
             .then((data) => {
                 allData = [...data.plugins];
                 allData.sort(compare(sort));
-                setPlugins(allData);
+                setLazyPlugin(allData);
                 setAllPlugins(allData);
             });
     }, []);
@@ -282,13 +390,13 @@ const App = ({}) => {
         window.scrollTo(0, 0);
     };
     const tagSortHandle = (tag, name) => {
-        setPlugins(tag);
+        setLazyPlugin(tag);
         setTagActive(name);
         window.scrollTo(0, 0);
     };
 
     const searchHandle = (e) => {
-        setPlugins(
+        setLazyPlugin(
             allPlugins.filter((t) => {
                 let text = t.name.toLocaleLowerCase() + t.description.toLocaleLowerCase();
                 return text.includes(e.target.value);
@@ -331,79 +439,20 @@ const App = ({}) => {
             </HeaderStyle>
             <input placeholder="Search..." onChange={(e) => searchHandle(e)} autoFocus />
             <main className={thumbnail ? `thumbnailView` : null}>
-                {plugins.map((i) => {
-                    return (
-                        <a
-                            key={Math.random()}
-                            href={`https://www.figma.com/community/plugin/${i.id}`}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            {thumbnail ? (
-                                <img
-                                    src={`https://www.figma.com/community/plugin/${i.id}/thumbnail`}
-                                    alt="thumbnail"
-                                    loading="lazy"
-                                    className="cover"
-                                />
-                            ) : null}
-                            <section>
-                                <div className="card-top">
-                                    <div className="name">
-                                        <img
-                                            src={`https://www.figma.com/community/plugin/${i.id}/icon`}
-                                            alt="icon"
-                                            className="icon"
-                                        />
-                                        <h3>{i.name} </h3>
-                                    </div>
-                                    <p>
-                                        {subString(
-                                            i.description
-                                                .replace(/(<p>)/gi, '')
-                                                .replace(/(<\/p>)/gi, '')
-                                                .replace(/(<strong>)/gi, '')
-                                                .replace(/(<\/strong>)/gi, '')
-                                                .replace(/(<br>)/gi, '')
-                                                .replace(/(<\/br>)/gi, '')
-                                                .replace(/(<h2>)/gi, '')
-                                                .replace(/(<\/h2>)/gi, '')
-                                                .replace(/(<h1>)/gi, '')
-                                                .replace(/(<\/h1>)/gi, '')
-                                                .replace(/(<h3>)/gi, '')
-                                                .replace(/(<\/h3>)/gi, '')
-                                                .replace(/(<h4>)/gi, '')
-                                                .replace(/(<\/h4>)/gi, '')
-                                                .replace(/(<h5>)/gi, '')
-                                                .replace(/(<\/h5>)/gi, '')
-                                                .replace(/(<h6>)/gi, '')
-                                                .replace(/(<\/h6>)/gi, '')
-                                                .replace(/(<li>)/gi, '')
-                                                .replace(/(<a>)/gi, '')
-                                                .replace(/(<\/a>)/gi, '')
-                                                .replace(/(<span>)/gi, '')
-                                                .replace(/(<\/span>)/gi, '')
-                                                .replace(/(<\/li>)/gi, ''),
-                                            100
-                                        )}
-                                    </p>
-                                </div>
-                                <div className="card-info">
-                                    {/* <span>{i.publisherName}</span> */}
-                                    <div>
-                                        <span>
-                                            <img src={iconLike} alt="like" />
-                                            <i>{i.likeCount.toLocaleString()}</i>
-                                        </span>
-                                        <span>
-                                            <img src={iconInstall} alt="install" />
-                                            <i>{i.installCount.toLocaleString()}</i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </section>
-                        </a>
-                    );
+                {plugins.map((list, i) => {
+                    if (list && list.length > 0 && nowShowIndex > i) {
+                        return list.map((item, index) => (
+                            <Card
+                                data={item}
+                                key={item.id}
+                                index={index}
+                                thumbnail={thumbnail}
+                                showNext={() => showNext(i + 1)}
+                            />
+                        ));
+                    } else {
+                        return '';
+                    }
                 })}
             </main>
             <footer>
