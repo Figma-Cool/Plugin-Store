@@ -407,9 +407,8 @@ const App = ({}) => {
                 })}
             </main>
             <footer>
-                Made by{' '}
-                <a target="_blank" href="https://figma.cool">
-                    Figma.Cool
+                <a target="_blank" href="https://love.figma.cool">
+                    ❤️ Sponsor us
                 </a>
             </footer>
         </AppStyle>
