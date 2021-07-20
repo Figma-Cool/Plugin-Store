@@ -9,9 +9,13 @@
     "removeComments": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
+    "module": "commonjs",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "typeRoots": [
       "./node_modules/@types",
-      "./node_modules/@figma"
+      "./node_modules/@figma",
+      "./src/@types",
     ]
   }
 }

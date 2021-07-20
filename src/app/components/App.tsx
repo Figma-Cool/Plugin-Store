@@ -1,6 +1,7 @@
 import * as React from 'react';
 import '../styles/ui.css';
-import {AppStyle, GlobalStyles, HeaderStyle} from '../styles/styles.tsx';
+import pluginJson from '../../plugin/figma-plugin.json';
+import {AppStyle, GlobalStyles, HeaderStyle} from '../styles/styles';
 import iconLike from '../assets/nav-icon/like.svg';
 import iconInstall from '../assets/nav-icon/install.svg';
 import iconAll from '../assets/nav-icon/all.svg';
@@ -28,7 +29,7 @@ import iconSvg from '../assets/nav-icon/svg.svg';
 // import iconSearch from "../assets/search.svg";
 import iconTop from '../assets/backtop.svg';
 
-const url = 'https://yuanqing.github.io/figma-plugins-stats/';
+// const url = pluginJson;
 
 function compare(p) {
     return function (m, n) {
@@ -78,7 +79,7 @@ const App = ({}) => {
     const [prototype, setPrototype] = React.useState([]);
     const [handoff, setHandoff] = React.useState([]);
     const [svg, setSvg] = React.useState([]);
-    const [inputValue, setInputValue] = React.useState();
+    // const [inputValue, setInputValue] = React.useState();
     const [sort, setSort] = React.useState('installCount');
     const [thumbnail, setThumbnail] = React.useState(false);
 
@@ -247,15 +248,10 @@ const App = ({}) => {
 
     React.useEffect(() => {
         let allData = [];
-
-        fetch(url)
-            .then((res) => res.json())
-            .then((data) => {
-                allData = [...data.plugins];
-                allData.sort(compare(sort));
-                setPlugins(allData);
-                setAllPlugins(allData);
-            });
+        allData = [...pluginJson.plugins];
+        allData.sort(compare(sort));
+        setPlugins(allData);
+        setAllPlugins(allData);
     }, []);
 
     const collectTags = React.useCallback((t, allArray, s) => {
